@@ -1,0 +1,40 @@
+logging:
+  file:
+    name: logs/rms-docker.log
+    max-size: 500MB
+    max-history: 10
+  level:
+    root: info
+    org.hibernate.SQL: debug
+    com.iron.rms: debug
+
+spring:
+  config:
+    import:
+      - classpath:/config/datasource-docker.yml
+
+mybatis:
+  mapper-locations: mybatis/mappers/*.xml
+
+springdoc:
+  default-consumes-media-type: application/json
+  default-produces-media-type: application/json
+  swagger-ui:
+    operations-sorter: alpha
+    path: /swagger-ui.html
+    disable-swagger-default-url: true
+    display-query-params-without-oauth2: true
+
+token:
+  expiration_time: 86400000
+  secret: IRON0000
+
+eureka:
+  instance:
+    instance-id: ${spring.cloud.client.hostname}:${spring.application.instance_id:${random.value}}
+    prefer-ip-address: true
+  client:
+    register-with-eureka: true
+    fetch-registry: true
+    service-url:
+      defaultZone: http://eureka-server:8761/eureka

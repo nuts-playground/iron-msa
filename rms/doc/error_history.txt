@@ -1,0 +1,57 @@
+[Error]
+Caused by: org.springframework.beans.factory.BeanCreationException: Error creating bean with name 'dataSource' defined in class path resource [org/springframework/boot/autoconfigure/jdbc/DataSourceConfiguration$Hikari.class]: Failed to instantiate [com.zaxxer.hikari.HikariDataSource]: Factory method 'dataSource' threw exception with message: Cannot load driver class: org.h2.Driver
+-> DB를 변경하는 과정에서 실수로 build.gradle을 수정하지 않아서 생긴 문제.
+-> 사용하려는 h2 설정을 하하여 해결
+
+[Error]
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table reservation (\000d\000a        created_time timestamp(6),\000d\000a        reservation_id bigint not null,\000d\000a        slot bigint,\000d\000a        [*]member bigint,\000d\000a        primary key (reservation_id)\000d\000a    )"; expected "identifier"; SQL statement:
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    create table tb_activity (\000d\000a        [*]minute integer,\000d\000a        activity_id bigint not null,\000d\000a        channel_id bigint,\000d\000a        created_time timestamp(6),\000d\000a        activity_name varchar(255),\000d\000a        contents varchar(255),\000d\000a        primary key (activity_id)\000d\000a    )"; expected "identifier"; SQL statement:
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Syntax error in SQL statement "\000d\000a    alter table if exists reservation \000d\000a       add constraint FK6todnh294w5ig6dw0vanhup9g \000d\000a       foreign key ([*]member) \000d\000a       references tb_user"; expected "identifier"; SQL statement:
+Caused by: org.h2.jdbc.JdbcSQLSyntaxErrorException: Table "TB_ACTIVITY" not found; SQL statement:
+-> Entity 설정 시 예약어를 사용해서 생긴 문제
+-> member, password와 같은 예약어를 피하여 해결
+
+[Error]
+오류 상황 :
+    gateway-server를 세팅하고 spring.cloud.gateway.routes에서 predicates 속성으로 rms로 들어오는 요청에 대한 처리를 하도록 설정했다.
+    직접 application(rms) 서버에 요청하면 제대로 동작하는데 gateway를 통하면 404가 뜬다.
+{
+  "timestamp": "2023-12-19T15:36:45.720+00:00",
+  "status": 404,
+  "error": "Not Found",
+  "path": "/rms/member/add"
+}
+-> spring.cloud.gateway 라이브러리 변경 -> 자동으로 gateway-mvc 로 추가되는것을 gateway로 변경하고
+ eureka 서버의 client가 되는 gateway-server와 rms 의 Application class에 어노테이션 추가(@EnableDiscoveryClient)
+
+[Error]
+오류 상황 :
+    (위 오류를 찾던 중)도커 컨테이너로 서버를 띄우지 않았음에도 eureka에 등록되는 instance_id에 'docker.internal'이 붙는 현상
+-> Docker DeskTop 을 설치하면 hosts 파일이 변경되어서 그런것.
+    `C:\Windows\System32\drivers\etc\hosts` 파일에서 설정된 것들을 주석처리하니 instance_id에서 docker.internal이 사라짐
+
+[Error]
+D:\study-workspace\springBoot-workspace\gateway-server\src\main\java\com\iron\gatewayserver\filter\LoggingFilter.java:94: error: cannot find symbol
+-> 롬복 오류
+build.gradle 파일에 롬복관련 설정 추가
+
+[Error]
+cannot find symbol 에러
+-> 테스트 시 롬복을 사용하도록 라이브러리가 추가되지 않아서 발생하는 것이므로.
+testAnnotationProcessor 'org.projectlombok:lombok' // 추가
+
+[Error]
+------------------ log -------------------
+2024-01-06T13:40:57.622Z  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration' of type [org.springframew
+ork.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+2024-01-06T13:40:57.623Z  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalanc
+erFilterConfig' of type [org.springframework.cloud.client.loadbalancer.reactive.LoadBalancerBeanPostProcessorAutoConfiguration$ReactorDeferringLoadBalancerFilterConfig] is not eligible for getting processed by all BeanPostProcessors
+ (for example: not eligible for auto-proxying)
+2024-01-06T13:40:57.625Z  INFO 1 --- [           main] trationDelegate$BeanPostProcessorChecker : Bean 'reactorDeferringLoadBalancerExchangeFilterFunction' of type [org.springframework.cloud.client.loadbalancer.reactive.DeferringLoa
+dBalancerExchangeFilterFunction] is not eligible for getting processed by all BeanPostProcessors (for example: not eligible for auto-proxying)
+------------------------------------------
+-> Spring Boot 3.2.0 / Cloud 2023.0.0 (최신버전) 버그.
+BeanPostProcessor 구현이나 직접 참조하는 Bean은 auto-proxying에 적합하지 않아서 그런 것.
+이것은 autowiring, security, transactional 어노테이션과 같은 AOP를 사용하는 스프링 기능이 정상동작하지 않는다는 뜻
+해결 : BeanPostProcessor 구현과 해당 Bean 종속성 사이의 순환을 끊어야 함
+-> 해당 Bean 설정 시 @Lazy 어노테이션 설정
