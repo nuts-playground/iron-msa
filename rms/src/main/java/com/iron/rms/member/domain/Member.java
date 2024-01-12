@@ -41,9 +41,11 @@ public class Member {
     @Column(name = "memberPw")
     private String memberPw;
 
+    @Builder.Default
     @OneToMany(mappedBy = "member")
     List<Party> parties = new ArrayList<>();
 
+    @Builder.Default
     @OneToMany(mappedBy = "member")
     List<Reservation> reservations = new ArrayList<>();
 
