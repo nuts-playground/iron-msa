@@ -4,8 +4,3 @@ include 'eureka-server'
 include 'gateway-server'
 include 'authentication-server'
 include 'rms'
-include 'common'
-include 'core'
-include 'core'
-include 'core'
-

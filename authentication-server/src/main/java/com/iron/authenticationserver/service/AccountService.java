@@ -34,4 +34,9 @@ public class AccountService {
                 .token(token)
                 .build());
     }
+
+    public boolean existsByAccountIdAndToken(String accountId, String token) {
+        return accountRepository.existsByAccountIdAndToken(accountId, token);
+    }
+
 }
