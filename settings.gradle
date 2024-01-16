@@ -1,6 +1,0 @@
-rootProject.name = "iron-msa"
-include 'config-server'
-include 'eureka-server'
-include 'gateway-server'
-include 'authentication-server'
-include 'rms'
