@@ -1,6 +1,5 @@
 package com.iron.authenticationserver.controller;
 
-
 import com.iron.authenticationserver.domain.Account;
 import com.iron.authenticationserver.dto.AccountDTO;
 import com.iron.authenticationserver.dto.ResponseDTO;
@@ -21,45 +20,45 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class AuthenticationController {
 
-    private final AccountService accountService;
+	private final AccountService accountService;
 
-    @RequestMapping(value = "/add", method = RequestMethod.POST)
-    public ResponseEntity<ResponseDTO> add(@Valid @RequestBody AccountDTO accountDTO) throws Exception {
-        ResponseDTO.ResponseDTOBuilder responseBuilder = ResponseDTO.builder();
-        Account account = accountService.findAccount(accountDTO);
+	@RequestMapping(value = "/add", method = RequestMethod.POST)
+	public ResponseEntity<ResponseDTO> add(@Valid @RequestBody AccountDTO accountDTO) throws Exception {
+		ResponseDTO.ResponseDTOBuilder responseBuilder = ResponseDTO.builder();
+		Account account = accountService.findAccount(accountDTO);
 
-        if (account != null) {
-            responseBuilder.code("100").message("already add user.");
-        } else {
-            accountService.addAccount(accountDTO, null);
-            responseBuilder.code("200").message("success");
-        }
+		if (account != null) {
+			responseBuilder.code("100").message("already add user.");
+		} else {
+			accountService.addAccount(accountDTO, null);
+			responseBuilder.code("200").message("success");
+		}
 
-        log.debug("add.account.id= {}", accountDTO.getAccountId());
+		log.debug("add.account.id= {}", accountDTO.getAccountId());
 
-        return ResponseEntity.ok(responseBuilder.build());
-    }
+		return ResponseEntity.ok(responseBuilder.build());
+	}
 
-    @RequestMapping(value = "/token", method = RequestMethod.POST)
-    public ResponseEntity<ResponseDTO> token(@Valid @RequestBody AccountDTO accountDTO) throws Exception {
-        ResponseDTO.ResponseDTOBuilder responseBuilder = ResponseDTO.builder();
-        Account account = accountService.findAccount(accountDTO);
+	@RequestMapping(value = "/token", method = RequestMethod.POST)
+	public ResponseEntity<ResponseDTO> token(@Valid @RequestBody AccountDTO accountDTO) throws Exception {
+		ResponseDTO.ResponseDTOBuilder responseBuilder = ResponseDTO.builder();
+		Account account = accountService.findAccount(accountDTO);
 
-        if (account == null) {
-            responseBuilder.code("101").message("Unkown user.");
-        } else {
-            String token = getToken(accountDTO);
-            accountService.addAccount(accountDTO, token);
-            responseBuilder.code("200").message("success");
-            responseBuilder.token(token);
-        }
+		if (account == null) {
+			responseBuilder.code("101").message("Unkown user.");
+		} else {
+			String token = getToken(accountDTO);
+			accountService.addAccount(accountDTO, token);
+			responseBuilder.code("200").message("success");
+			responseBuilder.token(token);
+		}
 
-        log.debug("token.account.id = {}", accountDTO.getAccountId());
+		log.debug("token.account.id = {}", accountDTO.getAccountId());
 
-        return ResponseEntity.ok(responseBuilder.build());
-    }
+		return ResponseEntity.ok(responseBuilder.build());
+	}
 
-    private String getToken(AccountDTO accountDTO) {
-        return JWTUtil.generate(accountDTO);
-    }
+	private String getToken(AccountDTO accountDTO) {
+		return JWTUtil.generate(accountDTO);
+	}
 }

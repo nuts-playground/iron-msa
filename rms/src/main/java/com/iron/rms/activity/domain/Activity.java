@@ -19,27 +19,27 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Activity {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "activity_id")
-    private Long activityId;
+	@Id
+	@GeneratedValue
+	@Column(name = "activity_id")
+	private Long activityId;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "channel_id")
-    private Channel channel;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "channel_id")
+	private Channel channel;
 
-    @Column(name = "activity_name")
-    private String activityName;
+	@Column(name = "activity_name")
+	private String activityName;
 
-    @Column(name = "contents")
-    private String contents;
+	@Column(name = "contents")
+	private String contents;
 
-    @Column(name = "activity_min")
-    private int activityMin;
+	@Column(name = "activity_min")
+	private int activityMin;
 
-    @OneToMany(mappedBy = "activity")
-    List<Slot> slots = new ArrayList<>();
+	@OneToMany(mappedBy = "activity")
+	List<Slot> slots = new ArrayList<>();
 
-    @Column(name = "created_time")
-    private LocalDateTime createdTime;
+	@Column(name = "created_time")
+	private LocalDateTime createdTime;
 }

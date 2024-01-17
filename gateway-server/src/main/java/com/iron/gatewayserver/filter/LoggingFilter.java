@@ -1,6 +1,5 @@
 package com.iron.gatewayserver.filter;
 
-
 import java.io.ByteArrayOutputStream;
 import java.nio.channels.Channels;
 import java.nio.charset.StandardCharsets;
@@ -34,14 +33,14 @@ import reactor.core.scheduler.Schedulers;
 		-> 실제로 요청 데이터를 다음 filter나 마이크로 서비스에 전달할 때 request로 들어온 json 데이터를 출력하는 부분을 decoratedrequest가 재정의된 기능에 개발해야 함
 	decoratedResponse: response 객체에 존재하는 응답 데이터를 읽어오기 위해 ServerHttpResponseDecorator 클래스를 통해 기능 재정의가 된 객체
 		-> response json 데이터 출력기능은 decoratedresponse가 재정의된 기능에 개발해야 함
-
-
+		
+		
  */
 @Component
 @Slf4j
 public class LoggingFilter implements WebFilter {
 
-    @Override
+	@Override
     public Mono<Void> filter(ServerWebExchange exchange, WebFilterChain chain) {
         ServerHttpResponse response = exchange.getResponse();
         ServerHttpRequest request = exchange.getRequest();
@@ -54,7 +53,7 @@ public class LoggingFilter implements WebFilter {
         return chain.filter(exchange.mutate().request(decoratedRequest).response(decoratedResponse).build());
     }
 
-    private ServerHttpResponseDecorator getDecoratedResponse(ServerHttpResponse response, ServerHttpRequest request, DataBufferFactory dataBufferFactory) {
+	private ServerHttpResponseDecorator getDecoratedResponse(ServerHttpResponse response, ServerHttpRequest request, DataBufferFactory dataBufferFactory) {
         return new ServerHttpResponseDecorator(response) {
             @Override
             public Mono<Void> writeWith(final Publisher<? extends DataBuffer> body) {
@@ -65,19 +64,19 @@ public class LoggingFilter implements WebFilter {
 
                     return super.writeWith(fluxBody.buffer().map(dataBuffers -> {
 
-                                        DefaultDataBuffer joinedBuffers = new DefaultDataBufferFactory().join(dataBuffers);
-                                        byte[] content = new byte[joinedBuffers.readableByteCount()];
-                                        joinedBuffers.read(content);
-                                        String responseBody = new String(content, StandardCharsets.UTF_8); //MODIFY RESPONSE and Return the Modified response
-                                        log.info("request.id: {}, method: {}, url: {}, \nresponse body :{}", request.getId(), request.getMethod(), request.getURI(), responseBody);
+                        DefaultDataBuffer joinedBuffers = new DefaultDataBufferFactory().join(dataBuffers);
+                        byte[] content = new byte[joinedBuffers.readableByteCount()];
+                        joinedBuffers.read(content);
+                        String responseBody = new String(content, StandardCharsets.UTF_8); //MODIFY RESPONSE and Return the Modified response
+                        log.info("request.id: {}, method: {}, url: {}, \nresponse body :{}", request.getId(), request.getMethod(), request.getURI(), responseBody);
 
-                                        return dataBufferFactory.wrap(responseBody.getBytes());
-                                    })
-                                    .switchIfEmpty(Flux.defer(() -> {
+                        return dataBufferFactory.wrap(responseBody.getBytes());
+                    })
+                    .switchIfEmpty(Flux.defer(() -> {
 
-                                        System.out.println("If empty");
-                                        return Flux.just();
-                                    }))
+                        System.out.println("If empty");
+                        return Flux.just();
+                    }))
                     ).onErrorResume(err -> {
                         log.error("error while decorating Response: {}", err.getMessage());
                         return Mono.empty();

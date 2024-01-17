@@ -6,9 +6,8 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class ChannelJpaRepository {
-
-    @PersistenceContext
-    EntityManager em;
+	@PersistenceContext
+	private EntityManager em;
 
 
 }

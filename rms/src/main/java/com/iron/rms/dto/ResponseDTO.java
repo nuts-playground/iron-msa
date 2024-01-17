@@ -7,6 +7,6 @@ import lombok.Getter;
 @Getter
 public class ResponseDTO {
 
-    private String code;
-    private String message;
+	private String code;
+	private String message;
 }

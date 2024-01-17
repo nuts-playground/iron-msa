@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 public class GatewayServerApplication {
 
-    public static void main(String[] args) {
-        SpringApplication.run(GatewayServerApplication.class, args);
-    }
+	public static void main(String[] args) {
+		SpringApplication.run(GatewayServerApplication.class, args);
+	}
 
-    @RequestMapping("/")
-    public String home() {
-        return "this is  gateway-server";
-    }
+	@RequestMapping("/")
+	public String home() {
+		return "this is  gateway-server";
+	}
 
 }

@@ -2,7 +2,6 @@ FROM openjdk:18-jdk-alpine AS builder
 COPY gradlew .
 COPY gradle gradle
 COPY build.gradle .
-#COPY settings.gradle .
 COPY src src
 RUN rm src/main/resources/bootstrap.yml
 RUN mv src/main/resources/bootstrap-docker.yml src/main/resources/bootstrap.yml

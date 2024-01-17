@@ -16,12 +16,12 @@ spring:
   cloud:
     gateway:
       routes:
-        - id: rms
-          uri: lb://RMS
-          predicates:
-            - Path=/rms/**
-          filters:
-            - RewritePath=/rms/(?<segment>.*), /$\{segment}
+      - id: rms
+        uri: lb://RMS
+        predicates:
+          - Path=/rms/**
+        filters:
+          - RewritePath=/rms/(?<segment>.*), /$\{segment}
 
 eureka:
   instance:

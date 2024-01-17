@@ -23,46 +23,44 @@ import java.util.List;
 @EntityListeners(AuditingEntityListener.class)
 public class Member {
 
-    @Schema(description = "회원ID", example = "1")
-    @Id
-    @GeneratedValue
-    @Column(name = "member_id")
-    private Long memberId;
+	@Schema(description = "회원ID", example = "1")
+	@Id
+	@GeneratedValue
+	@Column(name = "member_id")
+	private Long memberId;
 
-    @Schema(description = "회원이름", example = "iron")
-    @Column(name = "member_name")
-    private String memberName;
+	@Schema(description = "회원이름", example = "iron")
+	@Column(name = "member_name")
+	private String memberName;
 
-    @Schema(description = "회원전화번호", example = "01012345678")
-    @Column(name = "phone")
-    private String phone;
+	@Schema(description = "회원전화번호", example = "01012345678")
+	@Column(name = "phone")
+	private String phone;
 
-    @Schema(description = "비밀번호", example = "xxxxxxxxx")
-    @Column(name = "memberPw")
-    private String memberPw;
+	@Schema(description = "비밀번호", example = "xxxxxxxxx")
+	@Column(name = "memberPw")
+	private String memberPw;
 
-    @Builder.Default
-    @OneToMany(mappedBy = "member")
-    List<Party> parties = new ArrayList<>();
+	@OneToMany(mappedBy = "member")
+	List<Party> parties = new ArrayList<>();
 
-    @Builder.Default
-    @OneToMany(mappedBy = "member")
-    List<Reservation> reservations = new ArrayList<>();
+	@OneToMany(mappedBy = "member")
+	List<Reservation> reservations = new ArrayList<>();
 
-    @Schema(description = "회원유형", example = "ADMIN")
-    @Enumerated(EnumType.STRING)
-    @Column(name = "member_type")
-    private MemberType memberType;        // ADMIN(관리자), MASTER(채널주인), MEMBER(일반회원), BOTH(채널주인+일반회원)
+	@Schema(description = "회원유형", example = "ADMIN")
+	@Enumerated(EnumType.STRING)
+	@Column(name = "member_type")
+	private MemberType memberType;        // ADMIN(관리자), MASTER(채널주인), MEMBER(일반회원), BOTH(채널주인+일반회원)
 
-    @Schema(description = "회원가입일시", example = "2023-11-01 15:23:39")
-    @CreatedDate
-    @Column(name = "created_time")
-    private LocalDateTime createdTime;
+	@Schema(description = "회원가입일시", example = "2023-11-01 15:23:39")
+	@CreatedDate
+	@Column(name = "created_time")
+	private LocalDateTime createdTime;
 
-    public Member(String memberName, String phone, String memberPw, MemberType memberType) {
-        this.memberName = memberName;
-        this.phone = phone;
-        this.memberPw = memberPw;
-        this.memberType = memberType;
-    }
+	public Member(String memberName, String phone, String memberPw, MemberType memberType) {
+		this.memberName = memberName;
+		this.phone = phone;
+		this.memberPw = memberPw;
+		this.memberType = memberType;
+	}
 }

@@ -6,9 +6,6 @@ import org.springframework.stereotype.Repository;
 
 @Repository
 public class PartyJpaRepository {
-
-    @PersistenceContext
-    EntityManager em;
-
-
+	@PersistenceContext
+	private EntityManager em;
 }

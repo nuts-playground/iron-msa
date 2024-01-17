@@ -12,31 +12,26 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class AccountService {
 
-    private final AccountRepository accountRepository;
+	private final AccountRepository accountRepository;
 
-    public Account findAccount(AccountDTO accountDto) {
-        Optional<Account> optional = accountRepository.findById(accountDto.getAccountId());
+	public Account findAccount(AccountDTO accountDto) {
+		Optional<Account> optional = accountRepository.findById(accountDto.getAccountId());
 
-        if (optional.isPresent()) {
-            Account account = optional.get();
+		if (optional.isPresent()) {
+			Account account = optional.get();
 
-            if (account.getAccountPw().equals(accountDto.getAccountPw())) {
-                return account;
-            }
-        }
-        return null;
-    }
+			if (account.getAccountPw().equals(accountDto.getAccountPw())) {
+				return account;
+			}
+		}
+		return null;
+	}
 
-    public void addAccount(AccountDTO accountDTO, String token) {
-        accountRepository.save(Account.builder()
-                .accountId(accountDTO.getAccountId())
-                .accountPw(accountDTO.getAccountPw())
-                .token(token)
-                .build());
-    }
-
-    public boolean existsByAccountIdAndToken(String accountId, String token) {
-        return accountRepository.existsByAccountIdAndToken(accountId, token);
-    }
-
+	public void addAccount(AccountDTO accountDTO, String token) {
+		accountRepository.save(Account.builder()
+				.accountId(accountDTO.getAccountId())
+				.accountPw(accountDTO.getAccountPw())
+				.token(token)
+				.build());
+	}
 }

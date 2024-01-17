@@ -9,7 +9,7 @@ import lombok.Getter;
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class ResponseDTO {
 
-    private String code;
-    private String message;
-    private String token;
+	private String code;
+	private String message;
+	private String token;
 }

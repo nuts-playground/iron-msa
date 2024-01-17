@@ -17,20 +17,20 @@ import java.time.LocalDateTime;
 @ToString
 public class Party {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "party_id")
-    private Long partyId;
+	@Id
+	@GeneratedValue
+	@Column(name = "party_id")
+	private Long partyId;
 
-    @ManyToOne
-    @JoinColumn(name = "member_id")
-    private Member member;
+	@ManyToOne
+	@JoinColumn(name = "member_id")
+	private Member member;
 
-    @ManyToOne
-    @JoinColumn(name = "channel_id")
-    private Channel channel;
+	@ManyToOne
+	@JoinColumn(name = "channel_id")
+	private Channel channel;
 
-    @Column(name = "created_time")
-    private LocalDateTime createdTime;
+	@Column(name = "created_time")
+	private LocalDateTime createdTime;
 
 }

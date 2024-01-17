@@ -21,31 +21,31 @@ import java.util.List;
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
 public class Channel {
 
-    @Id
-    @GeneratedValue
-    @Column(name = "channel_id")
-    private Long channelId;
+	@Id
+	@GeneratedValue
+	@Column(name = "channel_id")
+	private Long channelId;
 
-    @Column(name = "channel_name")
-    private String channelName;
+	@Column(name = "channel_name")
+	private String channelName;
 
-    @Column(name = "contents")
-    private String contents;
+	@Column(name = "contents")
+	private String contents;
 
-    @OneToMany(mappedBy = "channel")
-    List<Party> parties = new ArrayList<>();
+	@OneToMany(mappedBy = "channel")
+	List<Party> parties = new ArrayList<>();
 
-    @OneToMany(mappedBy = "channel")
-    List<Activity> activities = new ArrayList<>();
+	@OneToMany(mappedBy = "channel")
+	List<Activity> activities = new ArrayList<>();
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "user_id")
-    private Member member;
+	@ManyToOne(fetch = FetchType.LAZY)
+	@JoinColumn(name = "user_id")
+	private Member member;
 
-    @Enumerated
-    @Column(name = "approval_state")
-    private ApprovalState approvalState;    // WAITING, APPROVED, DECLIEND, HOLD
+	@Enumerated
+	@Column(name = "approval_state")
+	private ApprovalState approvalState;    // WAITING, APPROVED, DECLIEND, HOLD
 
-    @Column(name = "created_time")
-    private LocalDateTime createdTime;
+	@Column(name = "created_time")
+	private LocalDateTime createdTime;
 }

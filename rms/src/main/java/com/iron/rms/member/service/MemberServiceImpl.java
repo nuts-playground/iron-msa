@@ -9,11 +9,11 @@ import org.springframework.stereotype.Service;
 @RequiredArgsConstructor
 public class MemberServiceImpl implements MemberService {
 
-    private final MemberRepository memberRepository;
+	private final MemberRepository memberRepository;
 
-    public void addMember(Member member) {
-        memberRepository.save(member);
-    }
+	public void addMember(Member member) {
+		memberRepository.save(member);
+	}
 
 
 }
