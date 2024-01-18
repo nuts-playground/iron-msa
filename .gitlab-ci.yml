@@ -122,7 +122,7 @@ rms-build:
     - docker rmi $RMS_IMAGE_NAME || echo "none image"
     - docker ps -a
     - docker images
-    - docker build ./item-service -t $RMS_IMAGE_NAME
+    - docker build ./rms -t $RMS_IMAGE_NAME
     - docker images
 
 rms-deploy:
