@@ -3,6 +3,14 @@ variables:
     GIT_CHECKOUT: "false"
     CONFIG_IMAGE_NAME: config-server-image
     CONFIG_CON_NAME: config-server
+    EUREKA_IMAGE_NAME: eureka-server-image
+    EUREKA_CON_NAME: eureka-server
+    GATEWAY_IMAGE_NAME: gateway-server-image
+    GATEWAY_CON_NAME: gateway-server
+    AUTH_IMAGE_NAME: authentication-server-image
+    AUTH_CON_NAME: authentication-server
+    RMS_IMAGE_NAME: rms-image
+    RMS_CON_NAME: rms
 
 stages:
   - clone
@@ -39,3 +47,87 @@ configserver-deploy:
     - gitlab-runner
     script:
         - docker run --network msa-network -d -p 8080:8080 --name $CONFIG_CON_NAME $CONFIG_IMAGE_NAME
+
+eurekaserver-build:
+  stage: build
+  tags:
+    - gitlab-runner
+  script:
+    - echo $EUREKA_IMAGE_NAME
+    - docker stop $EUREKA_CON_NAME || echo "none container"
+    - docker rm $EUREKA_CON_NAME || echo "none container"
+    - docker rmi $EUREKA_IMAGE_NAME || echo "none image"
+    - docker ps -a
+    - docker images
+    - docker build ./eureka-server -t $EUREKA_IMAGE_NAME
+    - docker images
+
+eurekaserver-deploy:
+    stage: deploy
+    tags:
+    - gitlab-runner
+    script:
+        - docker run --network msa-network -d -p 8761:8761 --name $EUREKA_CON_NAME $EUREKA_IMAGE_NAME
+
+gatewayserver-build:
+  stage: build
+  tags:
+    - gitlab-runner
+  script:
+    - echo $GATEWAY_IMAGE_NAME
+    - docker stop $GATEWAY_CON_NAME || echo "none container"
+    - docker rm $GATEWAY_CON_NAME || echo "none container"
+    - docker rmi $GATEWAY_IMAGE_NAME || echo "none image"
+    - docker ps -a
+    - docker images
+    - docker build ./gateway-server -t $GATEWAY_IMAGE_NAME
+    - docker images
+
+gatewayserver-deploy:
+    stage: deploy
+    tags:
+    - gitlab-runner
+    script:
+        - docker run --network msa-network -d -p 8070:8070 --name $GATEWAY_CON_NAME $GATEWAY_IMAGE_NAME
+
+authenticationserver-build:
+  stage: build
+  tags:
+    - gitlab-runner
+  script:
+    - echo $AUTH_IMAGE_NAME
+    - docker stop $AUTH_CON_NAME || echo "none container"
+    - docker rm $AUTH_CON_NAME || echo "none container"
+    - docker rmi $AUTH_IMAGE_NAME || echo "none image"
+    - docker ps -a
+    - docker images
+    - docker build ./authentication-server -t $AUTH_IMAGE_NAME
+    - docker images
+
+authenticationserver-deploy:
+    stage: deploy
+    tags:
+    - gitlab-runner
+    script:
+        - docker run --network msa-network -d -p 8900:8900 --name $AUTH_CON_NAME $AUTH_IMAGE_NAME
+
+rms-build:
+  stage: build
+  tags:
+    - gitlab-runner
+  script:
+    - echo $RMS_IMAGE_NAME
+    - docker stop $RMS_CON_NAME || echo "none container"
+    - docker rm $RMS_CON_NAME || echo "none container"
+    - docker rmi $RMS_IMAGE_NAME || echo "none image"
+    - docker ps -a
+    - docker images
+    - docker build ./item-service -t $RMS_IMAGE_NAME
+    - docker images
+
+rms-deploy:
+    stage: deploy
+    tags:
+    - gitlab-runner
+    script:
+        - docker run --network msa-network -d --name $RMS_CON_NAME $RMS_IMAGE_NAME
